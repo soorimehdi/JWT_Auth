@@ -25,14 +25,14 @@ const columns = [
 
 const rows = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 10 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: <Checkbox/> },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: <Checkbox/> },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: <Checkbox/> },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: <Checkbox/> },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: <Checkbox/> },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: <Checkbox/> },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: <Checkbox/> },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: <Checkbox/> },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 20 },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 30 },
+  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 40 },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age:50 },
+  { id: 6, lastName: 'Melisandre', firstName: null, age: 60 },
+  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 70 },
+  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 45 },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 35 },
 ];
 
 export default function AccountsManagement() {
