@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "IRANSans";
+  font-style: normal;
+  src: url(../util/font/IRANSans.ttf);
+}
+
+@font-face {
+  font-family: "IRANYekan";
+  font-style: normal;
+  src: url(../util/font/IRANYekan.ttf);
+}
