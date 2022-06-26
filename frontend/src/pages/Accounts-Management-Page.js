@@ -21,14 +21,6 @@ const columns = [
     valueGetter: (params) =>
       `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
-  {
-    fild : 'viwe',
-    headerName: 'Viwe',
-    sortable: false,
-    width: 70,
-    valueGetter: () =>
-    `${<Checkbox/>}`
-  }
 ];
 
 const rows = [
