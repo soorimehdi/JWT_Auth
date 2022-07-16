@@ -13,7 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import useStyles from '../../styles/sidebarStyles';
 import { UserContext } from '../../user-context';
 import {SidebarData} from './SidebarData';
-import SubMenu from './subMenu';
+import SubMenu from './SubMenu';
+
+
 
 
 const Sidebar = ({children}) => {
@@ -23,8 +25,9 @@ const Sidebar = ({children}) => {
     let Navigate = useNavigate();
   const [isOpened, setIsOpened] = useState(false);
   return (
-    <div className={classes.root}>
+    
       
+    <div className={classes.root}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -74,8 +77,8 @@ const Sidebar = ({children}) => {
       <div className={classes.footer}>
         <Typography variant="h6">Footer</Typography>
       </div>
-      
     </div>
+
   );
 };
 
