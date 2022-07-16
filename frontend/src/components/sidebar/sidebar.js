@@ -12,7 +12,7 @@ import LogutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import useStyles from '../../styles/sidebarStyles';
 import { UserContext } from '../../user-context';
-import {SidebarData} from './sidebarData';
+import {SidebarData} from './SidebarData';
 import SubMenu from './subMenu';
 
 
