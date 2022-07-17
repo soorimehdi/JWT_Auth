@@ -3,25 +3,26 @@ import clsx from "clsx";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+// import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { Grid, Button } from '@mui/material';
+import { Grid, Button, Box } from '@mui/material';
 import LogutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import useStyles from '../../styles/sidebarStyles';
 import { UserContext } from '../../user-context';
 import {SidebarData} from './SidebarData';
 import SubMenu from './SubMenu';
-
+import SubMenuIcons from './SubMenuIcons'
+import { Divider } from "@material-ui/core";
 
 
 
 const Sidebar = ({children}) => {
   const { logout, user } = useContext(UserContext);
-    const classes = useStyles();
     const isAuth = user.accesstoken ? true : false;
+    let classes = useStyles();
     let Navigate = useNavigate();
   const [isOpened, setIsOpened] = useState(false);
   return (
@@ -57,6 +58,8 @@ const Sidebar = ({children}) => {
       <div className={classes.container}>
         <Drawer
           variant="permanent"
+          anchor="right"
+          open={isOpened}
           classes={{
             paper: clsx(classes.drawer, {
               [classes.closed]: !isOpened,
@@ -64,19 +67,32 @@ const Sidebar = ({children}) => {
             }),
           }}
         >
-          {SidebarData.map((item, index)=>{
+          { isOpened
+          ? SidebarData.map((item, index)=>{
             return(
-            <SubMenu item={item} key = {index}/>)})
-          }
+              <Box key={index}>
+              <SubMenu item={item} key = {index}/>
+              <Divider/>
+              </Box>
+            )})
+          : SidebarData.map((item, index)=>{
+            return(
+              <Box key={index}>
+              <SubMenuIcons item={item} key={index}/>
+              <Divider/>
+              </Box>
+            )
+          })}
+          <Divider/>
         </Drawer>
         <main className={classes.main}>
               {children}
         </main>
       </div>
 
-      <div className={classes.footer}>
+      {/* <div className={classes.footer}>
         <Typography variant="h6">Footer</Typography>
-      </div>
+      </div> */}
     </div>
 
   );

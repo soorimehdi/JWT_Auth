@@ -1,19 +1,21 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from "@material-ui/core/styles";
+import { blue } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   root: {
-    textAlign: "center",
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
     color: "#000133",
   },
   appBar: {
-    background: 'blue',
     color: "#FC86AA",
+    display:'fixed',
+    backgroundColor: blue[900]
   },
   icon: {
     padding: "10px",
+    marginRight: '0px',
     color:'white'
   },
   title: {
@@ -24,13 +26,13 @@ const useStyles = makeStyles({
     flex: 1,
   },
   drawer: {
-    background: 'blue',
     position: "static",
     transition: "width .7s",
-    paddingTop:70,    
+    paddingTop:70,
+    backgroundColor:blue[700]
   },
   closed: {
-    width: "0px",
+    width: "60px",
   },
   opened: {
     width: "300px",
@@ -38,15 +40,18 @@ const useStyles = makeStyles({
   main: {
     flex: 1,
     background: "#f7f5f5",
-    color: "black",
+    display:'flex',
     alignItems:'center',
-    justifyContent: 'center'
+    justifyContent:'center',
+    paddingTop:20,
+    paddingBottom:20,
   },
   footer: {
     background: 'blue',
     height: "50px",
     color: "white",
     padding:10,
+    textAlign:'center'
   },
 })
 

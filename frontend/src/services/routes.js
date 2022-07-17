@@ -6,6 +6,7 @@ import PersonalInformation from "../pages/Personal-Information-Page";
 import UserPermissions from "../pages/User-Permissions";
 import AddressForm from "../pages/PersonalInformation/AddressForm";
 import Checkout from "../pages/PersonalInformation/Checkout";
+import PagePermissions from '../pages/Page-Permissions';
 
 
 
@@ -65,7 +66,15 @@ const RoutesApp = [
         rule:'private',
         authRequired: true,
         permissions:['owner, administrator']
-    }, 
+    },
+    {
+        name:'page Permissions',
+        path:'/pagepermissions',
+        element: PagePermissions,
+        rule:'private',
+        authRequired: true,
+        permissions:['owner, administrator']
+    },
     {
         name:'Address Form',
         path:'/personal/addressform',
