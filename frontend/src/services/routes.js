@@ -36,14 +36,6 @@ const RoutesApp = [
 
     },
     {
-        name:'Home Page',
-        path:'/homepage',
-        element: Homepage,
-        rule: 'public',
-        authRequired: false
-
-    },
-    {
         name: 'Personal Page',
         path:'/personal',
         element: PersonalInformation,

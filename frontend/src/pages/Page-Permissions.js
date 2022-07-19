@@ -28,20 +28,26 @@ const cacheRtl = createCache({
 
 export default function PagePermissions() {
   const border = '1px solid gray';
+  const paths = RoutesApp.filter(item=>item.rule!=='restricted').map(item=>item.path);
+  let RoutesLength = paths.length;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [dense, setDense] = React.useState(true);
-  const [selectData, setSelectData] = React.useState([
+  
+  // get data 
+  const selectData = [
     {roule:'owner'},
     {roule: 'administrator'},
     {roule:'group 1'},
-    {roule: 'group 2'}
-  ])
+  ];
+
+  
+
   const [checkedBox, setCheckedBox] = React.useState([
-    {name: 'viwe', value: Array(RoutesApp.length).fill(false)},
-    {name: 'insert', value: Array(RoutesApp.length).fill(false)},
-    {name: 'update', value: Array(RoutesApp.length).fill(false)},
-    {name: 'delete', value: Array(RoutesApp.length).fill(false)}
+    {name: 'viwe', value: Array(RoutesLength).fill(false)},
+    {name: 'insert', value: Array(RoutesLength).fill(false)},
+    {name: 'update', value: Array(RoutesLength).fill(false)},
+    {name: 'delete', value: Array(RoutesLength).fill(false)}
   ]);
   
   const [headData, setHeadData] = React.useState([
@@ -64,19 +70,24 @@ export default function PagePermissions() {
     let changeValue = !findName.value;
     if(changeValue){
       setIndeterminate({
+        ...indeterminate,
         [name]:false
       })
       setCheckedBox(
         checkedBox.map(item=>item.name === name
-          ?({...item, value: Array(RoutesApp.length).fill(true)})
+          ?({...item, value: Array(RoutesLength).fill(true)})
           : item)
       )
     } else{
       setCheckedBox(
         checkedBox.map(item=>item.name === name
-          ?({...item, value: Array(RoutesApp.length).fill(false)})
+          ?({...item, value: Array(RoutesLength).fill(false)})
           : item)
       )
+      setIndeterminate({
+        ...indeterminate,
+        [name]:false
+      })
     }
     setHeadData(
       headData.map(item=> item.name === name 
@@ -94,9 +105,9 @@ export default function PagePermissions() {
     newArray[index]=!value;
     let some = newArray.some(item=>item===true);
     let every = newArray.every(item=>item===true);
-    console.log(some, every);
     if(some && every){
       setIndeterminate({
+        ...indeterminate,
         [name]: false
       })
       setHeadData(
@@ -106,6 +117,7 @@ export default function PagePermissions() {
       )
     }else if (some && !every){
       setIndeterminate({
+        ...indeterminate,
         [name]: true
       })
     } else {
@@ -115,6 +127,7 @@ export default function PagePermissions() {
           : item)
       )
       setIndeterminate({
+        ...indeterminate,
         [name]: false
       })
     }
@@ -123,6 +136,32 @@ export default function PagePermissions() {
         ? ({...item, value: newArray})
         : item)
     )  
+  };
+
+  const handleSubmitForm = (e)=>{
+    let _viwe = checkedBox.find(item=> item.name==='viwe').value;
+    let _insert = checkedBox.find(item=> item.name==='insert').value;
+    let _update = checkedBox.find(item=> item.name==='update').value;
+    let _delete = checkedBox.find(item=> item.name==='delete').value;
+    let viweLink = [];
+    let insertLink = [];
+    let updateLink = [];
+    let deleteLink = [];
+    for (let i = 0; i < RoutesLength; i++){
+      if(_viwe[i]===true){
+        viweLink.push(paths[i]);
+      }
+      if(_insert[i]===true){
+        insertLink.push(paths[i]);
+      }
+      if(_update[i]===true){
+        updateLink.push(paths[i]);
+      }
+      if(_delete[i]===true){
+        deleteLink.push(paths[i]);
+      }
+    }
+    console.log('viwe:',viweLink, 'insert:', insertLink, 'updatd:', updateLink, 'delete:', deleteLink);
   }
 
   const handleChangePage = (event, newPage) => {
@@ -201,7 +240,9 @@ export default function PagePermissions() {
                       </TableHead>
 
                       <TableBody>
-                        {RoutesApp.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((route, index)=>{
+                        {RoutesApp.filter(item=>item.rule !=='restricted')
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((route, index)=>{
                           return(
                             <TableRow key={index}>
                               <TableCell key={index} value={route.path} sx={{border:border}}>
@@ -227,9 +268,9 @@ export default function PagePermissions() {
                         <TableRow>
                           <TablePagination 
                           labelRowsPerPage={<Box component={'span'} display='flex' sx={{pt:1.7}}>نمایش رکوردها</Box>}
-                          rowsPerPageOptions={[{label:'همه', value: RoutesApp.length},5,10,25]}
+                          rowsPerPageOptions={[{label:'همه', value: RoutesLength},5,10,25]}
                           colSpan={5}
-                          count={RoutesApp.length}
+                          count={RoutesLength}
                           rowsPerPage={rowsPerPage}
                           page={page}
                           SelectProps={{
@@ -252,6 +293,7 @@ export default function PagePermissions() {
               type="submit"
               variant="contained"
               sx={{ mt: 3, mb: 3 }}
+              onClick={handleSubmitForm}
               >
                 ثبت اطلاعات</Button>
             </Box>

@@ -1,7 +1,6 @@
 import React, {useState, createContext, useEffect} from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { Navigate } from 'react-router-dom';
 
 export const UserContext = createContext([]);
 
@@ -17,10 +16,9 @@ const UserProvider = ({children}) => {
     
     const readCookie = ()=>{
         const currentUser = Cookies.get('user');
-        
-        setUser({accesstoken:currentUser});
-        
+        setUser({accesstoken:currentUser}); 
     }
+    
     useEffect(() => {
         readCookie();  
     }, [])
