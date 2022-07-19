@@ -1,43 +1,17 @@
 import * as React from 'react';
 import RoutesApp from '../services/routes';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Container, Card, Box, Checkbox, TextField, Grid, 
-  Paper, Table, TableContainer, TableHead, TableRow, 
-  TableCell, TableBody, Button} from '@mui/material';
+import {Container, Card, Box, Checkbox, Grid, 
+  Paper, Table, TableContainer, TableHead, TableRow, Typography,
+  TableCell, TableBody, Button, FormControlLabel, Switch, TableFooter, TablePagination} from '@mui/material';
 
 import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
+import { blue } from '@mui/material/colors';
+import TablePaginationActions from '../components/Pageination'
 
-const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'viwe', headerName: 'Viwe', width: 130 },
-  { field: 'add', headerName: 'Add', width: 130 },
-  { field: 'age', headerName: 'Age', type: 'number', width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
 
 const theme = createTheme({
   direction:'rtl',
@@ -53,6 +27,23 @@ const cacheRtl = createCache({
 });
 
 export default function PagePermissions() {
+  const border = '1px solid gray';
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [dense, setDense] = React.useState(true);
+  const [selectData, setSelectData] = React.useState([
+    {roule:'owner'},
+    {roule: 'administrator'},
+    {roule:'group 1'},
+    {roule: 'group 2'}
+  ])
+  const [checkedBox, setCheckedBox] = React.useState([
+    {name: 'viwe', value: Array(RoutesApp.length).fill(false)},
+    {name: 'insert', value: Array(RoutesApp.length).fill(false)},
+    {name: 'update', value: Array(RoutesApp.length).fill(false)},
+    {name: 'delete', value: Array(RoutesApp.length).fill(false)}
+  ]);
+  
   const [headData, setHeadData] = React.useState([
     {name:'viwe', label:'نمایش', value: false},
     {name:'insert', label:'درج', value: false},
@@ -67,7 +58,7 @@ export default function PagePermissions() {
     delete: false
   });
 
-  const handleChangeGroupCheckbox =(e)=>{
+  const handleChangeGroupCheckbox = e =>{
     let name = e.target.name;
     let findName  = headData.find(item=>{ return item.name===name});
     let changeValue = !findName.value;
@@ -75,6 +66,17 @@ export default function PagePermissions() {
       setIndeterminate({
         [name]:false
       })
+      setCheckedBox(
+        checkedBox.map(item=>item.name === name
+          ?({...item, value: Array(RoutesApp.length).fill(true)})
+          : item)
+      )
+    } else{
+      setCheckedBox(
+        checkedBox.map(item=>item.name === name
+          ?({...item, value: Array(RoutesApp.length).fill(false)})
+          : item)
+      )
     }
     setHeadData(
       headData.map(item=> item.name === name 
@@ -83,77 +85,179 @@ export default function PagePermissions() {
       )
   }
 
+  const handleChageCheckbox = e =>{
+    let name = e.target.name;
+    let index = Number(e.target.value);
+    let values = checkedBox.find(item=>{return item.name === name}).value;
+    let value = values[index];
+    let newArray = values;
+    newArray[index]=!value;
+    let some = newArray.some(item=>item===true);
+    let every = newArray.every(item=>item===true);
+    console.log(some, every);
+    if(some && every){
+      setIndeterminate({
+        [name]: false
+      })
+      setHeadData(
+        headData.map(item=> item.name === name 
+          ? ({...item, value: true}) 
+          : item)
+      )
+    }else if (some && !every){
+      setIndeterminate({
+        [name]: true
+      })
+    } else {
+      setHeadData(
+        headData.map(item=> item.name === name 
+          ? ({...item, value: false}) 
+          : item)
+      )
+      setIndeterminate({
+        [name]: false
+      })
+    }
+    setCheckedBox(
+      checkedBox.map(item=> item.name === name
+        ? ({...item, value: newArray})
+        : item)
+    )  
+  }
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+
   return (
     <CacheProvider value={cacheRtl}>
-        <ThemeProvider theme={theme}> 
-            <Container component="main" maxWidth="md">
-              <Card variant='outlined' sx={{
-              mt:5, 
-              padding:3, 
-              boxShadow:1
-              }}>
-                <Paper>
-                  <Grid container >
-                    <Grid item xs={12} sm={6} sx={{border:'1px solid red'}}>combobox</Grid>
-                    <Grid item xs={12} sm={6}sx={{border:'1px solid red'}}>dense</Grid>
-                  </Grid>
-                  <Grid container sx={{border:'1px solid red'}}>
-                    <Grid item xs={12} sm={12}>
-                      <TableContainer>
-                        <Table>
-                          
-                          <TableHead >
-                            <TableRow sx = {{}}>
-                              <TableCell sx={{border:'1px solid gray'}}>pages</TableCell>
-                              {headData.map((item, index)=>{
-                                return(
-                                  <TableCell 
-                                  key={index} 
-                                  vlaue={item.name}
-                                  sx={{border:'1px solid gray', width:130}}
-                                  >
-                                      {item.label}
-                                      <Checkbox 
-                                      indeterminate={indeterminate[item.name]}
-                                      name = {item.name}
-                                      checked = {item.value}
-                                      onChange = {handleChangeGroupCheckbox}
-                                      />
-                                  </TableCell>
-                                )
-                              })}
-                            </TableRow>
-                          </TableHead>
+      <ThemeProvider theme={theme}> 
+        <Container component="main" maxWidth="md" sx={{mt:7}}>
+          <Card variant='outlined' sx={{alignItems:'center', boxShadow:2}}>
+            <Box width='100%' display='flex' alignItems='center' 
+            justifyContent='center' height={70} sx={{bgcolor:'primary.light'}}>
+              <Typography variant='h5' color='white' >
+                  مجوز کاربران 
+              </Typography>
+            </Box>
 
-                          <TableBody>
-                            {RoutesApp.map((route, index)=>{
-                              return(
-                                <TableRow key={index} sx={{border:'1px solid gray'}}>
-                                    <TableCell key={index} value={route.path}>{route.name} </TableCell>
-                                    <TableCell><Checkbox/></TableCell>
-                                    <TableCell><Checkbox/></TableCell>
-                                    <TableCell><Checkbox/></TableCell>
-                                    <TableCell><Checkbox/></TableCell>
-                                </TableRow>
-                              )
-                            })}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Grid>
-                  </Grid>
-                </Paper>
-                <Box textAlign={'center'}>
-                    <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 3 }}
-                    >
-                      submit</Button>
-                  </Box>
-              </Card>
-            </Container>
-        </ThemeProvider>
-      </CacheProvider>
+            <Paper sx={{pl:3, pr:3}}>
+              <Grid container sx={{pt:3}} >
+                <Grid item xs={12} sm={6} align='right' sx={{mb:2}}>
+                  <select
+                  style={{borderRadius:5, height:40, width:320, backgroundColor:blue[50]}}
+                  >
+                    {selectData.map((item, index)=>{
+                      return(
+                        <option key={index} vlaue={item.roule}>{item.roule}</option>
+                      )
+                    })}
+                  </select>
+                  
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControlLabel
+                  control={<Switch checked={dense} 
+                  onChange={e => setDense(e.target.checked)} />}
+                  label={dense ? 'فشرده': 'عادی'}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container >
+                <Grid item xs={12} sm={12}>
+                  <TableContainer>
+                    <Table
+                    sx={{ minWidth: 750 }} 
+                    size={dense ? 'small' : 'medium'}>
+                      <TableHead >
+                        <TableRow sx = {{bgcolor:blue[50]}}>
+                          <TableCell sx={{border:'1px solid gray'}}>pages</TableCell>
+                          {headData.map((item, index)=>{
+                            return(
+                              <TableCell
+                              key={index} 
+                              vlaue={item.name}
+                              align='right'
+                              sx={{border:border , width:120}}
+                              >
+                                {item.label}
+                                <Checkbox 
+                                indeterminate={indeterminate[item.name]}
+                                name = {item.name}
+                                checked = {item.value}
+                                onChange = {handleChangeGroupCheckbox}
+                                sx={{padding:0}}
+                                />
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                      </TableHead>
+
+                      <TableBody>
+                        {RoutesApp.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((route, index)=>{
+                          return(
+                            <TableRow key={index}>
+                              <TableCell key={index} value={route.path} sx={{border:border}}>
+                                {route.name} 
+                              </TableCell>
+                                {checkedBox.map((item, idx)=>{
+                                  return(
+                                    <TableCell key={idx} align='right' sx={{border:border}}>
+                                    <Checkbox sx={{padding:0}}
+                                    name = {item.name}
+                                    value = {index}
+                                    checked = {item.value[index]}
+                                    onChange = {handleChageCheckbox}
+                                    />
+                                    </TableCell>
+                                  )
+                                })}
+                            </TableRow>
+                          )
+                        })}
+                      </TableBody>
+                      <TableFooter>
+                        <TableRow>
+                          <TablePagination 
+                          labelRowsPerPage={<Box component={'span'} display='flex' sx={{pt:1.7}}>نمایش رکوردها</Box>}
+                          rowsPerPageOptions={[{label:'همه', value: RoutesApp.length},5,10,25]}
+                          colSpan={5}
+                          count={RoutesApp.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          SelectProps={{
+                            native: true}}
+                          onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
+                          ActionsComponent={TablePaginationActions}
+                          labelDisplayedRows={({ from, to, count }) => ''}
+                          />
+                        </TableRow>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              </Grid>
+            </Paper>
+            
+            <Box textAlign={'center'}>
+              <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 3, mb: 3 }}
+              >
+                ثبت اطلاعات</Button>
+            </Box>
+          </Card>
+        </Container>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
